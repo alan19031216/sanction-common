@@ -8,6 +8,7 @@ export const validateRequest = (
     res: Response,
     next: NextFunction
 ) => {
+    console.log(req)
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
