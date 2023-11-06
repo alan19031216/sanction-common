@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { NotAuthorizedError } from '../errors/not-authorized-error';
 import { Jwt } from '../services/jwt';
 
-interface Payload {
+interface TokenPayload {
   id: string;
   email: string;
 }
@@ -10,16 +10,16 @@ interface Payload {
 declare global {
   namespace Express {
     interface Request {
-      currentUser?: Payload;
+      token?: TokenPayload;
     }
   }
 }
 
-export const requireAuth = (
+export async function requireAuth(
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+) {
   const bearerHeader = req.headers['authorization']
   if (typeof bearerHeader == 'undefined') {
     throw new NotAuthorizedError();
@@ -29,8 +29,8 @@ export const requireAuth = (
   const bearerToken = bearer[1];
 
   try {
-    Jwt.decrypt(bearerToken)
-    // req.token = payload
+    const { payload } = await Jwt.decrypt(bearerToken)
+    req.token = payload
 
     next();
   } catch (error) {
