@@ -21,10 +21,7 @@ export class Jwt {
     }
 
     static async decrypt(jwt: string) {
-        const { payload, protectedHeader }: {
-            payload: PayloadType;
-            protectedHeader: any;
-        } = await jose.jwtDecrypt(jwt, this.secret, {
+        const { payload, protectedHeader } = await jose.jwtDecrypt(jwt, this.secret, {
             issuer: process.env.JWT_ISSUER!,
             audience: process.env.JWT_AUDIENCE!,
         })
