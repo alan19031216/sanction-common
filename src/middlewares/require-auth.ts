@@ -30,7 +30,10 @@ export async function requireAuth(
 
   try {
     const { payload } = await Jwt.decrypt(bearerToken)
-    req.token = payload
+    req.token = {
+      id: payload.id,
+      email: payload.email
+    }
 
     next();
   } catch (error) {
