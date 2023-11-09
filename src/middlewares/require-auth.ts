@@ -35,6 +35,10 @@ export async function requireAuth(
       email: payload.email
     }
 
+    if (!req.token) {
+      throw new NotAuthorizedError();
+    }
+
     next();
   } catch (error) {
     throw new NotAuthorizedError();
